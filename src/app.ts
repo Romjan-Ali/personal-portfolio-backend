@@ -53,13 +53,4 @@ app.use((req, res) => {
 // Error handler
 app.use(errorHandler)
 
-const PORT = env.PORT
-
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`)
-  console.log(`📊 Environment: ${env.NODE_ENV}`)
-  console.log(`🔗 CORS Origin: ${env.CORS_ORIGIN}`)
-  console.log(`🏗️  Features: Auth, Blogs, Projects, Skills, About`)
-})
-
 export default app
