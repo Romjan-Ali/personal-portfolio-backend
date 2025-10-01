@@ -127,6 +127,27 @@ export class BlogService {
     return relatedPosts
   }
 
+  // Get posts by tag
+  async getPostsByTag(tag: string): Promise<Blog[]> {
+    return prisma.blog.findMany({
+      where: {
+        published: true,
+        tags: { has: tag }
+      },
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            profileImage: true
+          }
+        }
+      },
+      orderBy: { createdAt: 'desc' }
+    })
+  }
+
   async createBlog(input: CreateBlogInput, authorId: string) {
     const existingSlug = await prisma.blog.findUnique({
       where: { slug: input.slug },
