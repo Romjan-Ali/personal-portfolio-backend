@@ -121,31 +121,10 @@ export class BlogService {
 
     const blogsResult = await this.getAllBlogs({ limit: 100 })
     const blogs = blogsResult.blogs
-    console.log({ blogs })
-    const relatedPosts = getRelatedPosts(blogs, blogId)
 
-    return prisma.blog.findMany({
-      where: {
-        id: { not: blogId },
-        published: true,
-        OR: [
-          { tags: { hasSome: currentBlog.tags } },
-          { content: { contains: currentBlog.tags[0], mode: 'insensitive' } },
-        ],
-      },
-      include: {
-        author: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            profileImage: true,
-          },
-        },
-      },
-      take: limit,
-      orderBy: { views: 'desc' },
-    })
+    const relatedPosts = getRelatedPosts(blogs, blogId, limit)
+
+    return relatedPosts
   }
 
   async createBlog(input: CreateBlogInput, authorId: string) {
