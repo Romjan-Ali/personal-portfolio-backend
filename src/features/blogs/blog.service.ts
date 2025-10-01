@@ -126,7 +126,18 @@ export class BlogService {
 
     return relatedPosts
   }
+  
+// Get all tags
+  async getAllTags(): Promise<string[]> {
+    const blogs = await prisma.blog.findMany({
+      where: { published: true },
+      select: { tags: true }
+    })
 
+    const allTags = blogs.flatMap(blog => blog.tags)
+    return [...new Set(allTags)].filter(Boolean)
+  }
+  
   // Get posts by tag
   async getPostsByTag(tag: string): Promise<Blog[]> {
     return prisma.blog.findMany({

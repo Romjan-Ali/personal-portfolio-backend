@@ -190,15 +190,3 @@ function getFallbackTags(content: string, maxTags: number): string[] {
 
   return fallbackTags.slice(0, maxTags)
 }
-
-/**
- * Get all unique tags from all posts
- */
-export function getAllTags(posts: Blog[]): string[] {
-  const allTags = posts
-    .filter(post => post.published)
-    .flatMap(post => extractTags(post.content))
-  
-  const uniqueTags = [...new Set(allTags)]
-  return uniqueTags.sort()
-}

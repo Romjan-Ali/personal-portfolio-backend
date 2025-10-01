@@ -60,6 +60,22 @@ export const getRelatedPosts = async (req: Request, res: Response) => {
   }
 }
 
+export const getAllTags = async (req: Request, res: Response) => {
+  try {
+    const tags = await blogService.getAllTags()
+
+    res.json({
+      success: true,
+      data: tags
+    })
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch tags'
+    })
+  }
+}
+
 export const getPostsByTag = async (req: Request, res: Response) => {
   try {
     const { tag } = req.params
