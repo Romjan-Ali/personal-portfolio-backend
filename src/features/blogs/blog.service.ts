@@ -1,7 +1,15 @@
 // src/features/blogs/blog.service.ts
+import type { Blog } from '@prisma/client'
 import { prisma } from '../../core/database/client'
 import { AppError } from '../../core/middleware/error.middleware'
-import type { CreateBlogInput, UpdateBlogInput, BlogQuery } from './types'
+import type {
+  CreateBlogInput,
+  UpdateBlogInput,
+  BlogQuery,
+  BlogQueryParams,
+} from './types'
+import { extractTags } from '../../utils/tags-extractor'
+import { getRelatedPosts } from '../../utils/get-related-posts'
 
 export class BlogService {
   async getAllBlogs(query: BlogQuery) {
@@ -83,6 +91,63 @@ export class BlogService {
     return blog
   }
 
+  // Get blog by ID
+  async getBlogById(id: string): Promise<Blog | null> {
+    return prisma.blog.findUnique({
+      where: { id },
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            profileImage: true,
+          },
+        },
+      },
+    })
+  }
+
+  // Get related posts
+  async getRelatedPosts(blogId: string, limit: number = 3): Promise<Blog[]> {
+    const currentBlog = await prisma.blog.findUnique({
+      where: { id: blogId },
+      select: { tags: true },
+    })
+
+    if (!currentBlog) {
+      return []
+    }
+
+    const blogsResult = await this.getAllBlogs({ limit: 100 })
+    const blogs = blogsResult.blogs
+    console.log({ blogs })
+    const relatedPosts = getRelatedPosts(blogs, blogId)
+
+    return prisma.blog.findMany({
+      where: {
+        id: { not: blogId },
+        published: true,
+        OR: [
+          { tags: { hasSome: currentBlog.tags } },
+          { content: { contains: currentBlog.tags[0], mode: 'insensitive' } },
+        ],
+      },
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            profileImage: true,
+          },
+        },
+      },
+      take: limit,
+      orderBy: { views: 'desc' },
+    })
+  }
+
   async createBlog(input: CreateBlogInput, authorId: string) {
     const existingSlug = await prisma.blog.findUnique({
       where: { slug: input.slug },
@@ -92,10 +157,13 @@ export class BlogService {
       throw new AppError('Slug already exists', 400)
     }
 
+    const tags = extractTags(input.content)
+
     const blog = await prisma.blog.create({
       data: {
         ...input,
         authorId,
+        tags,
       },
       include: {
         author: {

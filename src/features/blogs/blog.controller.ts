@@ -34,6 +34,32 @@ export const getBlogs = async (
   }
 }
 
+export const getRelatedPosts = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+    const { limit = 3 } = req.query
+
+    if(!id) {
+      return res.status(400).json(ApiResponse.error('Blog id is required'))
+    }
+
+    const relatedPosts = await blogService.getRelatedPosts(
+      id, 
+      parseInt(limit as string)
+    )
+
+    res.json({
+      success: true,
+      data: relatedPosts
+    })
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch related posts'
+    })
+  }
+}
+
 export const getBlogBySlug = async (req: Request, res: Response) => {
   try {
     const { slug } = req.params

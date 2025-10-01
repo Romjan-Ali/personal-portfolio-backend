@@ -6,6 +6,7 @@ import {
   createBlog,
   updateBlog,
   deleteBlog,
+  getRelatedPosts,
 } from './blog.controller'
 import { validateBody, validateQuery, requireAdmin } from '../../core/middleware'
 import {
@@ -19,6 +20,7 @@ const router = Router()
 // Public routes
 router.get('/', validateQuery(blogQuerySchema), getBlogs)
 router.get('/:slug', getBlogBySlug)
+router.get('/:id/related', getRelatedPosts)
 
 // Admin-only routes
 router.post('/', requireAdmin, validateBody(createBlogSchema), createBlog)
