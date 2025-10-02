@@ -39,23 +39,23 @@ export const getRelatedPosts = async (req: Request, res: Response) => {
     const { id } = req.params
     const { limit = 3 } = req.query
 
-    if(!id) {
+    if (!id) {
       return res.status(400).json(ApiResponse.error('Blog id is required'))
     }
 
     const relatedPosts = await blogService.getRelatedPosts(
-      id, 
+      id,
       parseInt(limit as string)
     )
 
     res.json({
       success: true,
-      data: relatedPosts
+      data: relatedPosts,
     })
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch related posts'
+      message: 'Failed to fetch related posts',
     })
   }
 }
@@ -66,12 +66,12 @@ export const getAllTags = async (req: Request, res: Response) => {
 
     res.json({
       success: true,
-      data: tags
+      data: tags,
     })
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch tags'
+      message: 'Failed to fetch tags',
     })
   }
 }
@@ -80,8 +80,8 @@ export const getPostsByTag = async (req: Request, res: Response) => {
   try {
     const { tag } = req.params
 
-    if(!tag){
-      return res.status(400).json(ApiResponse.error("Tag is required"))
+    if (!tag) {
+      return res.status(400).json(ApiResponse.error('Tag is required'))
     }
 
     const posts = await blogService.getPostsByTag(tag)
@@ -89,12 +89,12 @@ export const getPostsByTag = async (req: Request, res: Response) => {
     res.json({
       success: true,
       data: posts,
-      tag
+      tag,
     })
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch posts by tag'
+      message: 'Failed to fetch posts by tag',
     })
   }
 }
@@ -107,6 +107,18 @@ export const getBlogBySlug = async (req: Request, res: Response) => {
     }
     const blog = await blogService.getBlogBySlug(slug)
     res.json(ApiResponse.success('Blog retrieved successfully', blog))
+  } catch (error: any) {
+    res.status(error.statusCode || 500).json(ApiResponse.error(error.message))
+  }
+}
+
+export const getTotalViews = async (req: Request, res: Response) => {
+  console.log('called total views')
+  try {
+    const totalViews = await blogService.getTotalViews()
+    res.json(
+      ApiResponse.success('Total views retrieved successfully', totalViews)
+    )
   } catch (error: any) {
     res.status(error.statusCode || 500).json(ApiResponse.error(error.message))
   }

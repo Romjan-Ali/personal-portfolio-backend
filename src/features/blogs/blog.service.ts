@@ -160,6 +160,18 @@ export class BlogService {
     })
   }
 
+  async getTotalViews() {
+    const result = await prisma.blog.aggregate({
+      _sum: {
+        views: true,
+      },
+    })
+
+    const totalViews = result._sum.views || 0
+
+    return totalViews
+  }
+
   async createBlog(input: CreateBlogInput, authorId: string) {
     const existingSlug = await prisma.blog.findUnique({
       where: { slug: input.slug },

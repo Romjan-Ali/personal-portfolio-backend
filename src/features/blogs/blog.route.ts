@@ -2,15 +2,20 @@
 import { Router } from 'express'
 import {
   getBlogs,
+  getAllTags,
+  getTotalViews,
+  getPostsByTag,
+  getRelatedPosts,
   getBlogBySlug,
   createBlog,
   updateBlog,
   deleteBlog,
-  getRelatedPosts,
-  getPostsByTag,
-  getAllTags,
 } from './blog.controller'
-import { validateBody, validateQuery, requireAdmin } from '../../core/middleware'
+import {
+  validateBody,
+  validateQuery,
+  requireAdmin,
+} from '../../core/middleware'
 import {
   createBlogSchema,
   updateBlogSchema,
@@ -22,10 +27,10 @@ const router = Router()
 // Public routes
 router.get('/', validateQuery(blogQuerySchema), getBlogs)
 router.get('/tags', getAllTags)
-router.get('/:slug', getBlogBySlug)
-router.get('/:id/related', getRelatedPosts)
+router.get('/total-views', getTotalViews)
 router.get('/tag/:tag', getPostsByTag)
-
+router.get('/:id/related', getRelatedPosts)
+router.get('/:slug', getBlogBySlug)
 
 // Admin-only routes
 router.post('/', requireAdmin, validateBody(createBlogSchema), createBlog)
