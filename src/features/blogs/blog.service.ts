@@ -126,24 +126,25 @@ export class BlogService {
 
     return relatedPosts
   }
-  
-// Get all tags
+
+  // Get all tags
   async getAllTags(): Promise<string[]> {
     const blogs = await prisma.blog.findMany({
       where: { published: true },
-      select: { tags: true }
+      select: { tags: true },
+      orderBy: { views: 'desc' },
     })
 
-    const allTags = blogs.flatMap(blog => blog.tags)
+    const allTags = blogs.flatMap((blog) => blog.tags)
     return [...new Set(allTags)].filter(Boolean)
   }
-  
+
   // Get posts by tag
   async getPostsByTag(tag: string): Promise<Blog[]> {
     return prisma.blog.findMany({
       where: {
         published: true,
-        tags: { has: tag }
+        tags: { has: tag },
       },
       include: {
         author: {
@@ -151,11 +152,11 @@ export class BlogService {
             id: true,
             name: true,
             email: true,
-            profileImage: true
-          }
-        }
+            profileImage: true,
+          },
+        },
       },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
     })
   }
 
