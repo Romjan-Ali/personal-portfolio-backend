@@ -28,6 +28,10 @@ export class BlogService {
       ]
     }
 
+    if (tag) {
+      where.tags = { has: tag }
+    }
+
     if (published !== undefined) {
       where.published = published
     }
@@ -139,27 +143,7 @@ export class BlogService {
     return [...new Set(allTags)].filter(Boolean)
   }
 
-  // Get posts by tag
-  async getPostsByTag(tag: string): Promise<Blog[]> {
-    return prisma.blog.findMany({
-      where: {
-        published: true,
-        tags: { has: tag },
-      },
-      include: {
-        author: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            profileImage: true,
-          },
-        },
-      },
-      orderBy: { createdAt: 'desc' },
-    })
-  }
-
+  // Get total views
   async getTotalViews() {
     const result = await prisma.blog.aggregate({
       _sum: {
@@ -251,7 +235,7 @@ export class BlogService {
     return updatedBlog
   }
 
-  async deleteBlog(id: string, userId: string, userRole: string) {
+  async deleteBlogById(id: string, userId: string, userRole: string) {
     const blog = await prisma.blog.findUnique({
       where: { id },
     })

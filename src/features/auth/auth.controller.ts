@@ -16,6 +16,7 @@ export const register = async (req: Request, res: Response) => {
 }
 
 export const login = async (req: Request, res: Response) => {
+  console.log('called login()')
   try {
     const result = await authService.login(req.body)
     res.json(ApiResponse.success('Login successful', result))

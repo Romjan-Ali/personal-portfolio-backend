@@ -4,12 +4,11 @@ import {
   getBlogs,
   getAllTags,
   getTotalViews,
-  getPostsByTag,
   getRelatedPosts,
   getBlogBySlug,
   createBlog,
   updateBlog,
-  deleteBlog,
+  deleteBlogById,
 } from './blog.controller'
 import {
   validateBody,
@@ -23,18 +22,17 @@ import {
 } from './blog.schema'
 
 const router = Router()
-
+  
 // Public routes
-router.get('/', validateQuery(blogQuerySchema), getBlogs)
+router.get('/', getBlogs)
 router.get('/tags', getAllTags)
 router.get('/total-views', getTotalViews)
-router.get('/tag/:tag', getPostsByTag)
 router.get('/:id/related', getRelatedPosts)
 router.get('/:slug', getBlogBySlug)
 
 // Admin-only routes
 router.post('/', requireAdmin, validateBody(createBlogSchema), createBlog)
 router.put('/:id', requireAdmin, validateBody(updateBlogSchema), updateBlog)
-router.delete('/:id', requireAdmin, deleteBlog)
+router.delete('/:id', requireAdmin, deleteBlogById)
 
 export { router as blogRoutes }
