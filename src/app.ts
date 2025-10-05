@@ -11,7 +11,7 @@ import { authRoutes } from './features/auth/auth.routes'
 import { blogRoutes } from './features/blogs/blog.route' 
 import { projectRoutes } from './features/projects/project.route'
 import { skillRoutes } from './features/skills/skill.route'
-// import { aboutRoutes } from './features/about/about.routes'
+import { aboutRoutes } from './features/about/about.route'
 
 const app = express()
 
@@ -40,7 +40,7 @@ app.use('/api/auth', authRoutes)
 app.use('/api/blogs', blogRoutes)
 app.use('/api/projects', projectRoutes)
 app.use('/api/skills', skillRoutes)
-// app.use('/api/about', aboutRoutes)
+app.use('/api/about', aboutRoutes)
 
 // 404 handler
 app.use((req, res) => {
