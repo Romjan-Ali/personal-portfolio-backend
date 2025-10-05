@@ -194,9 +194,6 @@ export class BlogService {
     userId: string,
     userRole: string
   ) {
-    console.log({ id, userId, userRole })
-    console.log('req.body for update blog', input)
-
     const blog = await prisma.blog.findUnique({
       where: { id },
     })
@@ -253,7 +250,6 @@ export class BlogService {
         },
       },
     })
-    console.log('updatedBlog', updatedBlog)
     return updatedBlog
   }
 

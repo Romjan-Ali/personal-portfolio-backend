@@ -103,7 +103,6 @@ export const getBlogById = async (req: Request, res: Response) => {
 }
 
 export const getTotalViews = async (req: Request, res: Response) => {
-  console.log('called total views')
   try {
     const totalViews = await blogService.getTotalViews()
     res.json(

@@ -33,14 +33,11 @@ export const validate = (schema: ZodSchema) =>
 // Specific validation helpers for different parts of the request
 export const validateBody = (schema: ZodSchema) => 
   (req: Request, res: Response, next: NextFunction) => {
-    console.log('login request', req.body)
     try {
       const result = schema.parse(req.body)
-      console.log({result})
       ;(req as any).validatedBody = result
       next()
     } catch (error: any) {
-      console.log({error})
       return res.status(400).json({
         success: false,
         message: 'Body validation failed',
