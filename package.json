@@ -6,7 +6,6 @@
   "scripts": {
     "build": "bun install",
     "start": "bun run src/server.ts",
-    "vercel-start": "bun run src/server.ts",
     "dev": "bun --watch run src/server.ts"
   },
   "devDependencies": {
