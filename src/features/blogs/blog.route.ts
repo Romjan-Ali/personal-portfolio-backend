@@ -9,6 +9,7 @@ import {
   createBlog,
   updateBlog,
   deleteBlogById,
+  getBlogById,
 } from './blog.controller'
 import {
   validateBody,
@@ -27,6 +28,7 @@ const router = Router()
 router.get('/', getBlogs)
 router.get('/tags', getAllTags)
 router.get('/total-views', getTotalViews)
+router.get('/id/:id', getBlogById)
 router.get('/:id/related', getRelatedPosts)
 router.get('/:slug', getBlogBySlug)
 

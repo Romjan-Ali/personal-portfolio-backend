@@ -34,7 +34,7 @@ model Blog {
   tags          String[]
 
   thumbnail     String?   // main thumbnail image
-  images        String[]  @default([]) // multiple blog images if needed
+  images        String[]  @default([]) 
 
   author        User?     @relation(fields: [authorId], references: [id], name: "author_blogs")
   authorId      String?
@@ -44,37 +44,49 @@ model Blog {
 }
 
 model Project {
-  id            String    @id @default(uuid())
-  title         String
-  description   String
-  liveUrl       String?
-  repoUrl       String?
-  tags          String[]  @default([])
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id          String    @id @default(uuid())
+  title       String
+  description String
+  image       String?   
+  liveUrl     String?
+  repoUrl     String?
+  tags        String[]  @default([])
+  featured    Boolean   @default(false) 
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
-  owner         User?     @relation(fields: [ownerId], references: [id])
-  ownerId       String?
+  owner       User?     @relation(fields: [ownerId], references: [id])
+  ownerId     String?
 }
 
 model Skill {
   id        String   @id @default(uuid())
   name      String
-  level     String?  // Beginner / Intermediate / Advanced
-  order     Int?     @default(0)
+  level     Int      @default(0)
+  category  String   
+  color     String?  
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model About {
-  id         String   @id @default(uuid())
-  fullName   String
-  bio        String
-  email      String?
-  phone      String?
-  location   String?
-  imageUrl   String?  // Profile / About section image
+  id          String   @id @default(uuid())
+  fullName    String
+  title       String   
+  bio         String
+  shortBio    String?  
+  email       String?
+  phone       String?
+  location    String?
+  imageUrl    String?
+  resumeUrl   String?  
+  status      String?  
+  stats       Json?    
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  @@unique([email])
 }
 
 enum Role {

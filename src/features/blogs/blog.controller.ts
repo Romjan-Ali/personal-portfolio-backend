@@ -89,6 +89,19 @@ export const getBlogBySlug = async (req: Request, res: Response) => {
   }
 }
 
+export const getBlogById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+    if (!id) {
+      return res.status(400).json(ApiResponse.error('Id is required'))
+    }
+    const blog = await blogService.getBlogById(id)
+    res.json(ApiResponse.success('Blog retrieved successfully', blog))
+  } catch (error: any) {
+    res.status(error.statusCode || 500).json(ApiResponse.error(error.message))
+  }
+}
+
 export const getTotalViews = async (req: Request, res: Response) => {
   console.log('called total views')
   try {

@@ -194,6 +194,9 @@ export class BlogService {
     userId: string,
     userRole: string
   ) {
+    console.log({ id, userId, userRole })
+    console.log('req.body for update blog', input)
+
     const blog = await prisma.blog.findUnique({
       where: { id },
     })
@@ -217,9 +220,28 @@ export class BlogService {
       }
     }
 
+    // Filter only updatable fields
+    const updatableFields = [
+      'title',
+      'slug',
+      'summary',
+      'content',
+      'published',
+      'tags',
+      'thumbnail',
+      'images',
+    ]
+
+    const updateData: any = {}
+    for (const field of updatableFields) {
+      if (field in input) {
+        updateData[field] = input[field as keyof UpdateBlogInput]
+      }
+    }
+
     const updatedBlog = await prisma.blog.update({
       where: { id },
-      data: input,
+      data: updateData,
       include: {
         author: {
           select: {
@@ -231,7 +253,7 @@ export class BlogService {
         },
       },
     })
-
+    console.log('updatedBlog', updatedBlog)
     return updatedBlog
   }
 
