@@ -6,7 +6,6 @@ import type {
   CreateBlogInput,
   UpdateBlogInput,
   BlogQuery,
-  BlogQueryParams,
 } from './types'
 import { extractTags } from '../../utils/tags-extractor'
 import { getRelatedPosts } from '../../utils/get-related-posts'
